@@ -52,13 +52,13 @@ const CreateDeck = () => {
                 <Text className='text-gray-600'>Deck Name</Text>
                 <TextInput
                 placeholder='Enter deck name' 
-                className='border border-none border-gray-300 p-3 rounded-xl bg-white shadow-sm' style={{elevation: 2}}/>
+                className='border border-none border-gray-300 p-3 rounded-xl bg-white shadow-sm  focus:border-twitterblue-100' style={{elevation: 2}}/>
             </View>
             <View className='flex gap-2'>
                 <Text className='text-gray-600'>Description (Optional)</Text>
                 <TextInput 
                 placeholder='Add a description'
-                className='border border-none border-gray-300 p-3 rounded-xl bg-white shadow-sm' style={{elevation: 2}}/>
+                className='border border-none border-gray-300 p-3 rounded-xl bg-white shadow-sm  focus:border-twitterblue-100' style={{elevation: 2}}/>
             </View>
             <View className='flex gap-2'>
                 <Text className='text-gray-600'>Deck Color</Text>
