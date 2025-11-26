@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity, TextInput, FlatList, TouchableWithoutFeedback } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient }  from "expo-linear-gradient";
-
+import { useRouter } from 'expo-router';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 interface color{
     id: number,
@@ -40,10 +41,16 @@ const colorPicker: color[] = [
 ]
 
 const CreateDeck = () => {
+    const route = useRouter()
+    const [tick, setTick] = useState<number | null>(null);
+
+    function handleSelect(id: number){
+        setTick(id);
+    }
     return (
     <SafeAreaView className="flex flex-col p-5 gap-2 relative">
         <TouchableOpacity className='mb-4'>
-            <Ionicons name="arrow-back-sharp" size={24} color="gray" />
+            <Ionicons name="arrow-back-sharp" size={24} color="gray" onPress={()=> route.back()} />
         </TouchableOpacity>
         <Text className='text-lg text-blue-500 mb-8'>Create Deck</Text>
 
@@ -68,19 +75,20 @@ const CreateDeck = () => {
                 contentContainerStyle={{gap: 15, display: "flex", justifyContent: "space-between"}}
                 data={colorPicker}
                 keyExtractor={(item)=>(item.id.toString())}
-                renderItem={({item})=> <TouchableWithoutFeedback>
+                renderItem={({item})=> <TouchableWithoutFeedback onPress={()=> handleSelect(item.id)}>
                     <LinearGradient
                     colors={item.color}
                     start={{x: 0, y: 0}}
                     end={{x: 0, y: 0}}
-                    className='w-[52px] h-[52px] rounded-[28px]'
-                    style={{borderRadius: 28}}>    
+                    className='w-[52px] h-[52px] rounded-[28px] items-center justify-center'
+                    style={{borderRadius: 28}}> 
+                    {tick === item.id ? <FontAwesome5 name="check" size={24} color="white" /> :  ""}
                     </LinearGradient>
                 </TouchableWithoutFeedback>}
                 />
             </View>
 
-            <TouchableOpacity> 
+            <TouchableOpacity onPress={()=> route.push(`/screens/DeckDetails`)}> 
                 <LinearGradient
                 colors={["#1DA1F2", "#1DA1F2"]}
                 start={{x: 0, y: 0}}

@@ -3,12 +3,14 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient }  from "expo-linear-gradient";
+import { useRouter } from 'expo-router'
 
 const CreateDeck = () => {
+    const route = useRouter()
     return (
     <SafeAreaView className="flex flex-col p-5 gap-2 relative">
         <TouchableOpacity className='mb-4'>
-            <Ionicons name="arrow-back-sharp" size={24} color="gray" />
+            <Ionicons name="arrow-back-sharp" size={24} color="gray" onPress={()=> route.back()} />
         </TouchableOpacity>
         <Text className='text-lg text-blue-500 mb-8'>Add Flashcard</Text>
 

@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useRouter } from 'expo-router'
 
 interface Card{
     id: number,
@@ -46,7 +47,7 @@ const cards: Card[] = [
 ]
 
 const DeckDetails = () => {
-    
+    const route = useRouter();
     return (
         <SafeAreaView className="flex flex-col p-5 gap-2 relative">
             <FlatList
@@ -75,7 +76,7 @@ const DeckDetails = () => {
             )}
             ListHeaderComponent={()=> <>
             <TouchableOpacity className='mb-5'>
-                <Ionicons name="arrow-back-sharp" size={24} color="gray" />
+                <Ionicons name="arrow-back-sharp" size={24} color="gray" onPress={()=> route.back()} /> 
             </TouchableOpacity>
 
             <Text className='text-lg text-blue-500'>Statistics</Text>

@@ -4,7 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Feather from '@expo/vector-icons/Feather';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 
 interface Card{
@@ -43,7 +43,8 @@ const cards: Card[] = [
 
 const DeckDetails = () => {
     const params = useLocalSearchParams()
-    
+    const route = useRouter();
+
     return (
         <SafeAreaView className="flex flex-col p-5 gap-2 relative">
             <FlatList
@@ -63,7 +64,7 @@ const DeckDetails = () => {
             )}
             ListHeaderComponent={()=> <>
             <TouchableOpacity className='mb-5'>
-                <Ionicons name="arrow-back-sharp" size={24} color="gray" />
+                <Ionicons name="arrow-back-sharp" size={24} color="gray" onPress={()=> route.replace(`/screens/HomeScreen`)}/>
             </TouchableOpacity>
             <View className='flex flex-col gap-2'>
                 <Text className='text-lg text-blue-500'>{params.title}</Text>
@@ -71,17 +72,17 @@ const DeckDetails = () => {
                 <Text className='text-gray-600 text-sm'>Spanish Vocabulary description</Text>
             </View>
             <View className='flex gap-5 mt-5 mb-4'>
-                <TouchableOpacity className='flex flex-row w-full bg-cyan-400 gap-3 align-middle rounded-3xl py-4 justify-center'>
+                <TouchableOpacity className='flex flex-row w-full bg-cyan-400 gap-3 align-middle rounded-3xl py-4 justify-center' onPress={()=> route.push(`/screens/AddCardScreen`)}>
                     <MaterialCommunityIcons name="plus" size={24} color="white" />
                     <Text className='text-bg-white align-middle'>Add Card</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity  className='flex flex-row w-full bg-indigo-500 gap-3 align-middle rounded-3xl  py-4 justify-center'>
+                <TouchableOpacity  className='flex flex-row w-full bg-indigo-500 gap-3 align-middle rounded-3xl  py-4 justify-center' onPress={()=> route.push(`/screens/FlashCards`)}>
                     <Feather name="book-open" size={24} color="white"/>
                     <Text className='text-bg-white align-middle '>Study</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity  className='flex flex-row w-full bg-green-400 gap-3 align-middle rounded-3xl py-4 justify-center'>
+                <TouchableOpacity  className='flex flex-row w-full bg-green-400 gap-3 align-middle rounded-3xl py-4 justify-center' onPress={()=> route.push(`/screens/Stats`)}>
                     <Ionicons name="stats-chart" size={24} color="white"/>
                     <Text className='text-bg-white align-middle'>View Stats</Text>
                 </TouchableOpacity>

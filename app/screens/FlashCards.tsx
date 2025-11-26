@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, Pressable, Animated } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback  } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
-
+import { useRouter, useFocusEffect  } from 'expo-router';
 
 interface Card{
     id: number,
@@ -42,8 +42,15 @@ const cards: Card[] = [
 const FlashCards = () => {
     const [ currentIndex, setCurrentIndex ] = useState(0);
     const [ showBack, setShowBack ] = useState(false);
-
+    const route = useRouter()
     const progressAnimation = useRef(new Animated.Value(0)).current;
+
+    useFocusEffect(
+        useCallback(()=>{
+            setCurrentIndex(0)
+            setShowBack(false)
+        }, [])
+    )
 
     useEffect(()=>{
         Animated.timing(progressAnimation, {
@@ -55,13 +62,25 @@ const FlashCards = () => {
 
     function handleNextCard(){
         setShowBack(false);
+    if(currentIndex + 1 >= cards.length ){
+        route.push(`/screens/Session`)
+        return;
+    }
         setCurrentIndex(index => index + 1);
+    }
+
+    function getText(){
+        //{currentIndex > cards.length ? route.push(`/screens/Session`) : showBack ? cards[currentIndex].back : cards[currentIndex].front }
+        if(currentIndex + 1 > cards.length){
+            route.push(`/screens/Session`)
+        } 
+        return showBack ? cards[currentIndex].back : cards[currentIndex].front;          
     }
 
     return (
         <SafeAreaView className="flex-1 flex flex-col p-5 gap-2 relative ">
             <TouchableOpacity className='mb-4'>
-                <Ionicons name="arrow-back-sharp" size={24} color="gray" />
+                <Ionicons name="arrow-back-sharp" size={24} color="gray" onPress={()=> route.back()}/>
             </TouchableOpacity>
             <View className='mb-5'>
                 <Text className='text-lg text-blue-500'>Spanish Vocabulary</Text>
@@ -88,7 +107,7 @@ const FlashCards = () => {
             }}
             onPress={()=> setShowBack(!showBack)}>
                 <Text className="text-lg">
-                    {showBack ? cards[currentIndex].back : cards[currentIndex].front}
+                    {getText()}
                 </Text>
                 <Text className='text-gray-500 text-sm'>{showBack ? "Tap to see front" : "Tap to flip"}</Text>
             </Pressable>
