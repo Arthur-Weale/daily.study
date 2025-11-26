@@ -1,13 +1,7 @@
-//import CreateDeck from "./screens/CreateDeck";
-//import HomeScreen from "./screens/HomeScreen";
-//import AddCardScreen from "./screens/AddCardScreen";
-import FlashCards from "./screens/FlashCards";
+import HomeScreen from "./screens/HomeScreen";
 
 export default function Index() {
   return (
-      //<HomeScreen/>
-      //<CreateDeck/>
-      //<AddCardScreen/>
-      <FlashCards/>
+      <HomeScreen/>
   );
 }
