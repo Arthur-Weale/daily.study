@@ -6,6 +6,7 @@ import Deck from "../components/ui/Deck";
 import CreateButton from "../components/ui/CreateButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import safeNavigate from "../utils/safeNavigate";
 
 const HomeScreen = () => {
     const route = useRouter();
@@ -14,7 +15,7 @@ const HomeScreen = () => {
             {/* Heading and icon */}
             <View className="flex flex-row justify-between">
                 <Header/>
-                <Ionicons name="stats-chart" size={23} color="gray" onPress={()=> route.push('/screens/Stats')}/>
+                <Ionicons name="stats-chart" size={23} color="gray" onPress={()=> safeNavigate(()=>route.push('/screens/Stats'))}/>
             </View>
 
             <Text className="text-gray-700 mb-7">Pick a deck to study</Text>

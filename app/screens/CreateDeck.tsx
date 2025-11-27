@@ -5,6 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient }  from "expo-linear-gradient";
 import { useRouter } from 'expo-router';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import safeNavigate from '../utils/safeNavigate';
 
 interface color{
     id: number,
@@ -88,7 +89,7 @@ const CreateDeck = () => {
                 />
             </View>
 
-            <TouchableOpacity onPress={()=> route.push(`/screens/DeckDetails`)}> 
+            <TouchableOpacity onPress={()=> safeNavigate(()=>route.push(`/screens/DeckDetails`)) }> 
                 <LinearGradient
                 colors={["#1DA1F2", "#1DA1F2"]}
                 start={{x: 0, y: 0}}
