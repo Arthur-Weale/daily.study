@@ -136,3 +136,15 @@ export async function getRecentActivity() {
     ORDER BY ra.created_at DESC
   `);
 }
+
+export async function getAllDecksWithCardCount() {
+  return await db.getAllAsync(`
+    SELECT 
+      d.*, 
+      COUNT(c.id) as card_count
+    FROM decks d
+    LEFT JOIN cards c ON d.id = c.deck_id
+    GROUP BY d.id
+    ORDER BY d.created_at DESC
+  `);
+}

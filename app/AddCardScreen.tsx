@@ -1,76 +1,95 @@
-import { View, Text, TouchableOpacity, TextInput, } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { LinearGradient }  from "expo-linear-gradient";
-import { useRouter } from 'expo-router'
-
-interface card{
-    front: string, 
-    back: string
-}
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { createCard, initDb } from '@/app/data/database';
 
 const CreateDeck = () => {
-    const [form, setForm ] = useState<card>({
-        front : "",
-        back : ""
-    })
+  const router = useRouter();
+  const { id: deckId } = useLocalSearchParams<{ id: string }>();
 
-    function handleChange(field: string , text: string){
-        setForm(prev => ({
-            ...prev, [field]: text
-        }))
+  const [front, setFront] = useState('');
+  const [back, setBack] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    if (!front.trim() || !back.trim()) {
+      Alert.alert('Missing fields', 'Please fill both front and back');
+      return;
     }
 
-    const route = useRouter()
-    return (
-    <SafeAreaView className="flex flex-col p-5 gap-2 relative">
-        <TouchableOpacity className='mb-4'>
-            <Ionicons name="arrow-back-sharp" size={24} color="gray" onPress={()=> route.back()} />
+    if (!deckId) {
+      Alert.alert('Error', 'No deck selected');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await initDb();
+      await createCard(Number(deckId), front.trim(), back.trim());
+      Alert.alert('Success', 'Card added!', [{ text: 'OK', onPress: () => router.back() }]);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save card');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 p-5">
+
+        <TouchableOpacity onPress={() => router.back()} className="mb-6">
+          <Ionicons name="arrow-back" size={28} color="#1DA1F2" />
         </TouchableOpacity>
-        <Text className='text-lg text-blue-500 mb-8'>Add Flashcard</Text>
 
-        <View className='flex gap-6'>
-            <View className='flex gap-2'>
-                <Text className='text-gray-600'>Front</Text>
-                <TextInput
-                placeholder='Enter front text (e.g., question)' 
-                value={form.front}
-                onChangeText={text=>handleChange("front", text)}
-                className='border border-none border-gray-300 p-3 rounded-xl bg-white shadow-sm  focus:border-twitterblue-100' style={{elevation: 2}}/>
-            </View>
-            <View className='flex gap-2'>
-                <Text className='text-gray-600'>Back</Text>
-                <TextInput 
-                placeholder='Enter back text (e.g., answer)'
-                value={form.back}
-                onChangeText={text=>handleChange("back", text)}
-                className='border border-none border-gray-300 p-3 rounded-xl bg-white shadow-sm h-48 focus:border-twitterblue-100' style={{elevation: 2, textAlignVertical: "top"}}
-                multiline={true}
-                numberOfLines={6}
-                spellCheck={true} // Enables spellcheck with red underline
-                autoCorrect={true}
-                />
-            </View>
+        <Text className="text-2xl font-bold text-gray-800 mb-8">Add Flashcard</Text>
 
-            <TouchableOpacity> 
-                <LinearGradient
-                colors={["#1DA1F2", "#1DA1F2"]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.1, y: 1}}
-                style={{
-                    paddingHorizontal: 5,
-                    paddingVertical: 20,
-                    borderRadius: 24,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
-                <Text className='text-white'>Save Card</Text>
-                </LinearGradient>
-            </TouchableOpacity>
+        <View className="flex-1 gap-6">
+
+          <View className="gap-2">
+            <Text className="text-gray-600 font-medium">Front (Question)</Text>
+            <TextInput
+              placeholder="e.g. What is the capital of France?"
+              value={front}
+              onChangeText={setFront}
+              className="bg-gray-50 border border-gray-200 p-4 rounded-2xl text-base"
+              style={{ elevation: 2 }}
+            />
+          </View>
+
+          <View className="gap-2 flex-1">
+            <Text className="text-gray-600 font-medium">Back (Answer)</Text>
+            <TextInput
+              placeholder="e.g. Paris"
+              value={back}
+              onChangeText={setBack}
+              multiline
+              textAlignVertical="top"
+              className="bg-gray-50 border border-gray-200 p-4 rounded-2xl flex-1 text-base"
+              style={{ elevation: 2 }}
+            />
+          </View>
+
+          <TouchableOpacity onPress={handleSave} disabled={saving}>
+            <LinearGradient
+              colors={["#1DA1F2", "#0D8AE0"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              className="py-5 rounded-2xl items-center shadow-lg"
+            >
+              <Text className="text-white text-lg font-semibold">
+                {saving ? 'Saving...' : 'Save Card'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
         </View>
+      </View>
     </SafeAreaView>
-    )
-}
+  );
+};
 
-export default CreateDeck
+export default CreateDeck;
