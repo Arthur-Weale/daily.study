@@ -1,14 +1,25 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Octicons from '@expo/vector-icons/Octicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRouter } from 'expo-router';
-import safeNavigate from '../utils/safeNavigate';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Octicons from '@expo/vector-icons/Octicons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import safeNavigate from './utils/safeNavigate';
 
 const Session = () => {
     const route = useRouter()
+    const params = useLocalSearchParams()
+
+    const score = parseInt(Array.isArray(params.score) ? params.score[0] : params.score );
+    const total = parseInt(Array.isArray(params.total) ? params.total[0] : params.total );
+    console.log(typeof(score))
+    // const total: number = params.total;
+
+    function calculateStats(){
+        if(score <= 0) return 0;
+        return Math.round(( score / total ) * 100);
+    }
     return (
         <SafeAreaView className='flex flex-col p-5 gap-2 relative items-center'>
             <Text className='text-twitterblue-100 mb-5 text-center text-lg'>Session Complete</Text>
@@ -16,21 +27,21 @@ const Session = () => {
                 <Octicons name="trophy" size={40} color="white" />
             </View>
             <Text>Great Job!</Text>
-            <Text className='text-gray-500 mb-2'>You completed studying Spanish Vocabulary</Text>
+            <Text className='text-gray-500 mb-2'>You completed studying {params.title}</Text>
 
             <View className='flex flex-col gap-5 w-full bg-white p-5 rounded-2xl' style={{elevation: 5}}>
                 <Text className=' text-gray-500'>Accuracy</Text>
                 <View className='flex flex-row gap-2'>
-                    <Text className='text-twitterblue-100 text-5xl'>100</Text>
+                    <Text className='text-twitterblue-100 text-5xl'>{calculateStats()}</Text>
                     <Text className='text-gray-500 text-2xl align-bottom'>%</Text>
                 </View>
-                <Text className='text-gray-500'>3 out of 3 cards correct</Text>
+                <Text className='text-gray-500'>{score <= 0 ? 0 : params.score } out of {total}  cards correct</Text>
             </View>
 
             <View className='flex flex-col gap-5 w-full bg-white p-5 rounded-2xl mb-5' style={{elevation: 5}}>
                 <Text className='text-gray-500'>Cards Studied</Text>
                 <View className='flex flex-row gap-2'>
-                    <Text className='text-pinkBrand-400 text-5xl'>3</Text>
+                    <Text className='text-pinkBrand-400 text-5xl'>{params.total}</Text>
                     <Text className='text-gray-500 text-[22px] align-bottom'>cards</Text>
                 </View>
             </View>

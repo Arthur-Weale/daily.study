@@ -7,15 +7,15 @@ import { useRouter } from 'expo-router'
 const CreateButton = () => {
     const route = useRouter()
     return (
-    <View style={{ position: 'absolute', bottom: -210, right: 20 }}>
-        <TouchableOpacity onPress={()=> route.push(`/screens/CreateDeck`)}>
+    <View style={{ position: 'absolute', bottom: 60, right: 20, zIndex: 100 }}>
+        <TouchableOpacity onPress={()=> route.push(`/CreateDeck`)}>
             <LinearGradient
                 colors={["#1DA1F2", "#1DA1F2"]}
                 start={{x: 0, y: 0}}
                 end={{x: 0.1, y: 1}}
                 style={{
                     flexDirection: 'row',
-                    gap: 4,
+                    //gap: 4,
                     paddingHorizontal: 5,
                     paddingVertical: 12,
                     borderRadius: 24,
